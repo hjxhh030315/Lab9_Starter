@@ -2,107 +2,230 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab 9</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 9</title>
 
-  <style>
-    button {
-      margin: 3px;
-    }
-
-    button:hover {
-      cursor: pointer;
-    }
-
-    #first-num,
-    #second-num {
-      width: 60px;
-    }
-
-    output {
-      border: 1px solid gray;
-      display: block;
-      height: 18px;
-      margin-top: 5px;
-      padding: 5px;
-      width: 240px;
-    }
-
-    main {
-      width: 800px;
-    }
-
-    #error-btns {
-      column-gap: 5px;
-      display: flex;
-      flex-wrap: wrap;
-      margin-top: 30px;
-      row-gap: 5px;
-    }
-
-    #error-btns>* {
-      padding: 8px 2px;
-      width: 122px;
-    }
-  </style>
+    <style>
+        button {
+            margin: 3px;
+        }
+        
+        button:hover {
+            cursor: pointer;
+        }
+        
+        #first-num,
+        #second-num {
+            width: 60px;
+        }
+        
+        output {
+            border: 1px solid gray;
+            display: block;
+            height: 18px;
+            margin-top: 5px;
+            padding: 5px;
+            width: 240px;
+        }
+        
+        main {
+            width: 800px;
+        }
+        
+        #error-btns {
+            column-gap: 5px;
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            row-gap: 5px;
+        }
+        
+        #error-btns>* {
+            padding: 8px 2px;
+            width: 122px;
+        }
+    </style>
 </head>
 
 <body>
-  <main>
-    <form>
-      <fieldset>
-        <legend>Error Calculator</legend>
-        <input name="first-num" id="first-num" />
-        <select name="operator" id="operator">
+    <main>
+        <form>
+            <fieldset>
+                <legend>Error Calculator</legend>
+                <input name="first-num" id="first-num" />
+                <select name="operator" id="operator">
           <option>+</option>
           <option>-</option>
           <option>*</option>
           <option>/</option>
         </select>
-        <input name="second-num" id="second-num" />
-        <button id="calculate">Calculate</button>
-        <br />
-        <output></output>
-      </fieldset>
-    </form>
+                <input name="second-num" id="second-num" />
+                <button id="calculate">Calculate</button>
+                <br />
+                <output></output>
+            </fieldset>
+        </form>
 
-    <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
-    </section>
-  </main>
+        <section id="error-btns">
+            <button>Console Log</button>
+            <button>Console Error</button>
+            <button>Console Count</button>
+            <button>Console Warn</button>
+            <button>Console Assert</button>
+            <button>Console Clear</button>
+            <button>Console Dir</button>
+            <button>Console dirxml</button>
+            <button>Console Group Start</button>
+            <button>Console Group End</button>
+            <button>Console Table</button>
+            <button>Start Timer</button>
+            <button>End Timer</button>
+            <button>Console Trace</button>
+            <button>Trigger a Global Error</button>
+        </section>
+    </main>
 
-  <script>
-    let form = document.querySelector('form');
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
-    });
+    <script>
+        class MultiplyByZeroError extends Error {
+            constructor() {
+                super("Cannot multiply by zero");
+                this.name = "MultiplyByZeroError";
+            }
+        }
+        let form = document.querySelector('form');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            let output = document.querySelector('output');
+            let firstNum = document.querySelector('#first-num').value;
+            let secondNum = document.querySelector('#second-num').value;
+            let operator = document.querySelector('#operator').value;
+            try {
+                if (operator == '/' && secondNum == 0) {
+                    throw new Error("Cannot divide by zero");
+                }
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+                if (operator == '*' && secondNum == 0) {
+                    throw new MultiplyByZeroError();
+                }
 
-    // Start your code here
-    // You may move this JS to another file if you wish
-  </script>
+                output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+            } catch (error) {
+                console.error(error.message);
+                output.innerHTML = "Error: " + error.message;
+            } finally {
+                form.reset();
+            }
+        });
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+        let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
+        let count = 0;
+        let timerName = "Timer";
+
+        errorBtns.forEach(btn => {
+            btn.addEventListener('click', e => {
+                const btnText = e.target.textContent;
+                let randomData = {
+                    name: 'John',
+                    age: 30,
+                    city: 'New York'
+                };
+
+                switch (btnText) {
+                    case 'Console Log':
+                        console.log(randomData);
+                        break;
+                    case 'Console Error':
+                        console.error(randomData);
+                        break;
+                    case 'Console Count':
+                        console.count('Clicked Count');
+                        break;
+                    case 'Console Warn':
+                        console.warn('This is a warning!');
+                        break;
+                    case 'Console Assert':
+                        console.assert(false, "This is an assert");
+                        break;
+                    case 'Console Clear':
+                        console.clear();
+                        break;
+                    case 'Console Dir':
+                        console.dir(randomData);
+                        break;
+                    case 'Console dirxml':
+                        console.dirxml(document.querySelector('body'));
+                        break;
+                    case 'Console Group Start':
+                        console.group("Group Start");
+                        console.log("Inside group");
+                        break;
+                    case 'Console Group End':
+                        console.groupEnd();
+                        console.log("Group End");
+                        break;
+                    case 'Console Table':
+                        console.table([randomData, {
+                            name: 'Jane',
+                            age: 28,
+                            city: 'Chicago'
+                        }]);
+                        break;
+                    case 'Start Timer':
+                        console.time(timerName);
+                        break;
+                    case 'End Timer':
+                        console.timeEnd(timerName);
+                        break;
+                    case 'Console Trace':
+                        function f1() {
+                            function f2() {
+                                function f3() {
+                                    console.trace()
+                                }
+                                f3()
+                            }
+                            f2()
+                        }
+                        f1();
+                        break;
+                    case 'Trigger a Global Error':
+                        window.onerror("Triggered Global Error!", "script.js", 10);
+                        break;
+                }
+            });
+        });
+
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.log('An error occurred: ' + message);
+
+            // Construct error data
+            const errorData = {
+                message: message,
+                source: source,
+                lineno: lineno,
+                colno: colno,
+                error: String(error) // Convert error object to string to avoid issues with JSON serialization
+            };
+
+            // Send the error data to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'https://your-server.com/error-logs', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                if (xhr.readyState == 4 && xhr.status == "200") {
+                    console.log('Error data sent to the server successfully');
+                } else {
+                    console.error('Failed to send error data to the server');
+                }
+            }
+            xhr.send(JSON.stringify(errorData));
+
+            return false; // Prevent the firing of the default event handler
+        };
+    </script>
 </body>
 
 </html>
