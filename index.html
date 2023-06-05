@@ -47,6 +47,14 @@
             width: 122px;
         }
     </style>
+    <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+    <script>
+        window.TrackJS && TrackJS.install({
+            token: "33d6ea4631c848fdaac30e9f51c03425"
+                // for more configuration options, see https://docs.trackjs.com
+        });
+    </script>
+
 </head>
 
 <body>
@@ -109,7 +117,6 @@
                 if (operator == '*' && secondNum == 0) {
                     throw new MultiplyByZeroError();
                 }
-
                 output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
             } catch (error) {
                 console.error(error.message);
@@ -118,7 +125,7 @@
                 form.reset();
             }
         });
-        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
 
         let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
         let count = 0;
