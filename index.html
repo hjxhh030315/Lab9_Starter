@@ -117,7 +117,6 @@
                 if (operator == '*' && secondNum == 0) {
                     throw new MultiplyByZeroError();
                 }
-                output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
             } catch (error) {
                 console.error(error.message);
                 output.innerHTML = "Error: " + error.message;
@@ -125,7 +124,7 @@
                 form.reset();
             }
         });
-
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
 
         let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
         let count = 0;
